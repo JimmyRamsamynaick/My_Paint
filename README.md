@@ -165,10 +165,9 @@ My_Paint/
 
 ### Guides Disponibles
 
-- 📖 [Guide d'Architecture](README_TESTS.md) - Structure et tests
-- 🔧 [Guide de Développement](docs/DEVELOPMENT.md) - Contribution
-- 🎨 [Guide Utilisateur](docs/USER_GUIDE.md) - Utilisation
-- 🐛 [Guide de Débogage](docs/DEBUGGING.md) - Résolution problèmes
+- 📖 [Guide d'Architecture et Tests](README_TESTS.md) - Structure du projet et système de tests
+- 🤝 [Guide de Contribution](CONTRIBUTING.md) - Standards de code et processus de développement
+- 📋 [Historique des Versions](CHANGELOG.md) - Changements et évolutions du projet
 
 ### API Documentation
 
