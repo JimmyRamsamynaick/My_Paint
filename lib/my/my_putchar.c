@@ -1,21 +1,13 @@
 /*
-** EPITECH PROJECT, 2023
-** my_putchar.c
+** EPITECH PROJECT, 2024
+** B-MUL-200-BDX-2-1-mypaint-jimmy.ramsamynaick
 ** File description:
-** ignoring for git
+** my_putchar.c
 */
 
-#include "my.h"
 #include <unistd.h>
 
-void my_putchar(char c)
+int my_putchar(char c)
 {
-    write(1, &c, 1);
-}
-
-int my_putnchar(char c, int n)
-{
-    for (int i = 0; i < n; i = i + 1)
-        my_putchar(c);
-    return n;
+    return write(1, &c, 1);
 }

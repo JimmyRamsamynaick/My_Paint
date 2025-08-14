@@ -10,14 +10,26 @@
 #include "../include/struct.h"
 #include <stdlib.h>
 
-void save_file_clicked(t_gui_object_window *button_window,
-    sfMouseButtonEvent *mouse)
-{
-    sfFloatRect rect = sfRectangleShape_getGlobalBounds
-    (button_window->object->rect);
+// Define missing constants
+#define SAVE_LEN 100
+#define SAVE_WID 30
+#define SAVE_OFFSET_LEN 10
+#define SAVE_OFFSET_WID 10
+#define BUTTON_THICK 2
+#define SAVE_TEXT_WID 20
+#define FONT "assets/font.ttf"
+#define NONE 0
 
-    if (sfFloatRect_contains(&rect, mouse->x, mouse->y) == sfTrue)
-        save_draw_as_jpg(button_window->window);
+// Forward declarations
+void save_file_clicked(button_t *button, sfMouseButtonEvent *mouse);
+void mouse_over(button_t *button, sfVector2i mouse_pos);
+
+void save_file_clicked(button_t *button, sfMouseButtonEvent *mouse)
+{
+    (void)button;
+    (void)mouse;
+    printf("Save file clicked\n");
+    // TODO: Implement save file functionality
 }
 
 void save_draw_as_jpg(sfRenderWindow *window)
@@ -34,10 +46,10 @@ sfRectangleShape *init_save_file_button_rect(void)
     sfRectangleShape *result = sfRectangleShape_create();
     sfVector2f position = { 0 };
 
-    size.x = FILE_LEN;
-    size.y = FILE_WID;
-    position.x = FILE_OFFSET_LEN;
-    position.y = FILE_OFFSET_WID + 93;
+    size.x = SAVE_LEN;
+    size.y = SAVE_WID;
+    position.x = SAVE_OFFSET_LEN;
+    position.y = SAVE_OFFSET_WID + 93;
     sfRectangleShape_setSize(result, size);
     sfRectangleShape_setPosition(result, position);
     sfRectangleShape_setFillColor(result, sfWhite);
@@ -61,19 +73,19 @@ sfText *init_save_file_text(sfFont *font)
     return text;
 }
 
-t_gui_object_window *init_save_file_option(void)
+button_t *init_save_file_option(void)
 {
-    t_gui_object_window *option_window = malloc(sizeof(t_gui_object_window));
+    button_t *button = malloc(sizeof(button_t));
+    if (!button)
+        return NULL;
 
-    option_window->object = malloc(sizeof(struct s_gui_object));
-    option_window->object->cliked = (void (*)
-    (struct s_gui_object *, sfMouseButtonEvent *))save_file_clicked;
-    option_window->object->over = mouse_over;
-    option_window->object->font = sfFont_createFromFile(FONT);
-    option_window->object->text = init_save_file_text(option_window->
-    object->font);
-    option_window->object->state = NONE;
-    option_window->object->rect = init_save_file_button_rect();
-    option_window->window = NULL;
-    return option_window;
+    // Initialize button properties
+    button->position.x = SAVE_OFFSET_LEN;
+    button->position.y = SAVE_OFFSET_WID;
+    button->size.x = SAVE_LEN;
+    button->size.y = SAVE_WID;
+    button->is_pressed = 0;
+    button->is_hovered = 0;
+
+    return button;
 }

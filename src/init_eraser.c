@@ -12,32 +12,47 @@
 #include <SFML/Graphics.h>
 #include <stdlib.h>
 
-/*button_t *init_eraser(void)
+// Define missing constants
+#define BUTTON_THICK 2
+
+button_t *init_eraser(void)
 {
     button_t *result = malloc(sizeof(button_t));
-    result->zone_is_cliked = zone_clicked;
-    result->state = NONE;
-    result->rect = sfRectangleShape_create();
-    sfRectangleShape_setSize(result->rect, (sfVector2f){50, 50});
-    sfRectangleShape_setPosition(result->rect, (sfVector2f){1200, 25});
-    sfRectangleShape_setOutlineThickness(result->rect, BUTTON_THICK);
-    sfRectangleShape_setOutlineColor(result->rect, sfWhite);
-    sfRectangleShape_setFillColor(result->rect, sfWhite);
+    
+    if (!result)
+        return NULL;
+    
+    // Initialize eraser button with basic properties
+     result->position = (sfVector2i){1200, 25};
+     result->size = (sfVector2i){50, 50};
+    result->is_pressed = 0;
+    result->is_hovered = 0;
+    
     return result;
-}*/
+}
 
-button *init_eraser(void)
+void draw_eraser_button(all_object_t *obj)
 {
-    button *result = malloc(sizeof(button_t));
+    if (!obj || !obj->window)
+        return;
+    
+    // Create and draw eraser button
+    sfRectangleShape *rect = sfRectangleShape_create();
     sfTexture *texture = sfTexture_createFromFile("res/logo/gomme.png", NULL);
-
-    result->zone_is_cliked = zone_clicked;
-    result->state = NONE;
-    result->rect = sfRectangleShape_create();
-    sfRectangleShape_setTexture(result->rect, texture, sfTrue);
-    sfRectangleShape_setSize(result->rect, (sfVector2f){50, 50});
-    sfRectangleShape_setPosition(result->rect, (sfVector2f){1200, 25});
-    sfRectangleShape_setOutlineThickness(result->rect, BUTTON_THICK);
-    sfRectangleShape_setOutlineColor(result->rect, sfWhite);
-    return result;
+    
+    if (rect) {
+        if (texture)
+            sfRectangleShape_setTexture(rect, texture, sfTrue);
+        sfRectangleShape_setSize(rect, (sfVector2f){50, 50});
+        sfRectangleShape_setPosition(rect, (sfVector2f){1200, 25});
+        sfRectangleShape_setOutlineThickness(rect, BUTTON_THICK);
+        sfRectangleShape_setOutlineColor(rect, sfWhite);
+        
+        sfRenderWindow_drawRectangleShape(obj->window, rect, NULL);
+        
+        sfRectangleShape_destroy(rect);
+    }
+    
+    if (texture)
+        sfTexture_destroy(texture);
 }

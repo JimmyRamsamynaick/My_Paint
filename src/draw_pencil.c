@@ -11,38 +11,65 @@
 #include <stdlib.h>
 #include <SFML/Graphics.h>
 
-void save_draw(sfVertexArray *vertexArray, sfVector2f currsor_pos,
-    button *draw_zone, all_object_t *paint)
+void draw_pencil_pixel(all_object_t *paint, sfVector2i pos)
 {
-    sfVertex vert1 = {{MOUSE_X - 20, MOUSE_Y - 20},
-    COLOR_PEN, {0, 0}};
-    sfVertex vert2 = {{MOUSE_X, MOUSE_Y - 20}, COLOR_PEN, {1, 0}};
-    sfVertex vert3 = {{MOUSE_X, MOUSE_Y}, COLOR_PEN, {1, 1}};
-    sfVertex vert4 = {{MOUSE_X - 20, MOUSE_Y}, COLOR_PEN, {0, 1}};
-
-    sfVertexArray_append(vertexArray, vert1);
-    sfVertexArray_append(vertexArray, vert2);
-    sfVertexArray_append(vertexArray, vert3);
-    sfVertexArray_append(vertexArray, vert4);
-    sfVertexArray_setPrimitiveType(vertexArray, sfQuads);
-    sfRenderWindow_drawVertexArray(paint->window, vertexArray, NULL);
+    if (!paint || !paint->canvas || !paint->current_tool)
+        return;
+        
+    // Convert window coordinates to canvas coordinates
+    int canvas_x = pos.x - paint->canvas->position.x;
+    int canvas_y = pos.y - paint->canvas->position.y;
+    
+    // Check if position is within canvas bounds
+    if (canvas_x < 0 || canvas_x >= paint->canvas->size.x ||
+        canvas_y < 0 || canvas_y >= paint->canvas->size.y)
+        return;
+    
+    // Draw pixel on canvas texture
+    sfRenderTexture_setActive(paint->canvas->texture, sfTrue);
+    
+    // Create a small circle for pencil drawing
+    sfCircleShape *circle = sfCircleShape_create();
+    sfCircleShape_setRadius(circle, paint->current_tool->size / 2.0f);
+    sfCircleShape_setFillColor(circle, paint->current_tool->color);
+    sfCircleShape_setPosition(circle, (sfVector2f){canvas_x - paint->current_tool->size / 2.0f, 
+                                                   canvas_y - paint->current_tool->size / 2.0f});
+    
+    sfRenderTexture_drawCircleShape(paint->canvas->texture, circle, NULL);
+    sfRenderTexture_display(paint->canvas->texture);
+    
+    sfCircleShape_destroy(circle);
+    paint->canvas->modified = 1;
 }
 
-void draw_pencil(button *draw_zone, all_object_t *paint)
+void draw_pencil_line(all_object_t *paint, sfVector2i start, sfVector2i end)
 {
-    sfVector2i mouse_pos = sfMouse_getPositionRenderWindow(paint->window);
-    sfVector2f currsor_pos = { 0 };
-    sfFloatRect rect = { 0 };
-    sfVertexArray *vertexArray = { 0 };
-
-    currsor_pos = sfRenderWindow_mapPixelToCoords(paint->window,
-    mouse_pos, NULL);
-    if (draw_zone->state == PRESSED) {
-        rect = sfRectangleShape_getGlobalBounds(draw_zone->rect);
-        if (sfFloatRect_contains(&rect, MOUSE_X - 20, MOUSE_Y - 20) == 1) {
-            vertexArray = sfVertexArray_create();
-            save_draw(vertexArray, currsor_pos, draw_zone, paint);
-        }
+    if (!paint)
         return;
+        
+    // Simple line drawing using Bresenham's algorithm
+    int dx = abs(end.x - start.x);
+    int dy = abs(end.y - start.y);
+    int sx = start.x < end.x ? 1 : -1;
+    int sy = start.y < end.y ? 1 : -1;
+    int err = dx - dy;
+    
+    sfVector2i current = start;
+    
+    while (1) {
+        draw_pencil_pixel(paint, current);
+        
+        if (current.x == end.x && current.y == end.y)
+            break;
+            
+        int e2 = 2 * err;
+        if (e2 > -dy) {
+            err -= dy;
+            current.x += sx;
+        }
+        if (e2 < dx) {
+            err += dx;
+            current.y += sy;
+        }
     }
 }

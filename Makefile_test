@@ -1,0 +1,21 @@
+SRC_TEST = test_debug.c
+SRC_TEST += src/init_all.c src/window.c src/init_canvas.c src/draw.c src/click.c
+SRC_TEST += src/init_toolbar.c src/init_palette.c src/init_menu.c src/free.c
+SRC_TEST += src/events_analyse.c src/events.c src/menu_actions.c src/change_all_colors.c
+
+OBJ_TEST = $(SRC_TEST:.c=.o)
+
+NAME_TEST = test_debug
+
+GRAPHICS = -lcsfml-graphics -lcsfml-system -lcsfml-audio -lcsfml-window
+CPPFLAGS = -I./lib/my -I./include -I/opt/homebrew/include
+LDFLAGS = -L/opt/homebrew/lib
+
+libmy:
+	make -s -C lib/my
+
+$(NAME_TEST): libmy $(OBJ_TEST)
+	gcc $(CPPFLAGS) $(LDFLAGS) -L./lib/my -o $(NAME_TEST) $(OBJ_TEST) -lmy $(GRAPHICS)
+
+clean_test:
+	rm -f $(OBJ_TEST) $(NAME_TEST)

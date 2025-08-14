@@ -116,4 +116,45 @@ $RECYCLE.BIN/
 *.lnk
 
 
-#!! ERROR: mac is undefined. Use list command to see defined gitignore types !!#
+# Fichiers de compilation
+*.o
+*.a
+*.so
+*.dylib
+
+# Exécutables
+my_paint
+test_*
+!test_*.c
+
+# Fichiers temporaires
+*.tmp
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Dossiers IDE
+.vscode/
+.idea/
+*.dSYM/
+
+# Fichiers de debug
+*.log
+core
+vgcore.*
+
+# Fichiers générés
+*.png
+*.jpg
+*.bmp
+!res/**/*.png
+!res/**/*.jpg
+
+# Dossiers de build
+build/
+dist/
+
+# Fichiers système
+Thumbs.db
+ehthumbs.db

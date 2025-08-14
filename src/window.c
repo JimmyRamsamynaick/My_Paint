@@ -1,22 +1,27 @@
 /*
 ** EPITECH PROJECT, 2024
-** CSFMLproject
+** B-MUL-200-BDX-2-1-mypaint-jimmy.ramsamynaick
 ** File description:
 ** window.c
 */
 
-#include "../my.h"
+#include "../include/my_paint.h"
 #include "../include/all_macros.h"
 #include "../include/struct.h"
-#include <SFML/Graphics.h>
 
 sfRenderWindow *init_window(void)
 {
-    sfVideoMode mode = {WINDOWS_HEI, WINDOWS_WID, 32};
+    sfVideoMode mode = {WINDOW_WIDTH, WINDOW_HEIGHT, 32};
     sfRenderWindow *window = NULL;
-
-    window = sfRenderWindow_create(mode, WINDOWS_NAME, sfResize | sfClose,
-    NULL);
-    sfRenderWindow_setFramerateLimit(window, 60);
+    
+    window = sfRenderWindow_create(mode, WINDOW_TITLE, 
+                                   sfResize | sfClose, NULL);
+    
+    if (!window)
+        return NULL;
+    
+    sfRenderWindow_setFramerateLimit(window, FRAMERATE_LIMIT);
+    sfRenderWindow_setVerticalSyncEnabled(window, sfTrue);
+    
     return window;
 }

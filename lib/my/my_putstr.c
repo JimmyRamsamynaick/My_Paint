@@ -1,19 +1,23 @@
 /*
-** EPITECH PROJECT, 2023
-** my_putstr.c
+** EPITECH PROJECT, 2024
+** B-MUL-200-BDX-2-1-mypaint-jimmy.ramsamynaick
 ** File description:
-** Write a function that displays, one-by-one, the characters of a string
+** my_putstr.c
 */
 
-#include "my.h"
+int my_putchar(char c);
 
 int my_putstr(char const *str)
 {
     int i = 0;
-
-    while (str[i] != '\0') {
+    
+    if (!str)
+        return 0;
+    
+    while (str[i]) {
         my_putchar(str[i]);
-        i += 1;
+        i++;
     }
-    return (0);
+    
+    return i;
 }

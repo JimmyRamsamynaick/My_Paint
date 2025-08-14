@@ -13,20 +13,14 @@
 
 void handle_cliks(all_object_t *paint, sfEvent event)
 {
-    paint->edit_menu->button->cliked(paint->edit_menu->button, MOUSE);
-    paint->file_menu->button->cliked(paint->file_menu->button, MOUSE);
-    paint->help_menu->button->cliked(paint->help_menu->button, MOUSE);
-    paint->draw_zone->zone_is_cliked(paint->draw_zone, MOUSE);
-    paint->eraser->zone_is_cliked(paint->eraser, MOUSE);
-    paint->pencil->zone_is_cliked(paint->pencil, MOUSE);
+    if (!paint)
+        return;
+    
+    // Use the comprehensive mouse click handler from events.c
+    handle_mouse_click(paint, &event.mouseButton);
 }
 
-void handle_mouse_movement(all_object_t *paint, sfMouseMoveEvent *mouse)
-{
-    paint->edit_menu->button->over(paint->edit_menu->button, mouse);
-    paint->file_menu->button->over(paint->file_menu->button, mouse);
-    paint->help_menu->button->over(paint->help_menu->button, mouse);
-}
+// handle_mouse_movement is defined in events.c
 
 void analye_events(all_object_t *paint)
 {
@@ -35,16 +29,21 @@ void analye_events(all_object_t *paint)
     while (sfRenderWindow_pollEvent(paint->window, &event)) {
         switch (event.type) {
             case sfEvtMouseMoved:
-                handle_mouse_movement(paint, &event.mouseMove);
+                handle_mouse_move(paint, &event.mouseMove);
                 break;
             case sfEvtClosed:
                 sfRenderWindow_close(paint->window);
                 break;
             case sfEvtMouseButtonPressed:
-                handle_cliks(paint, event);
+                if (event.mouseButton.button == sfMouseLeft) {
+                    handle_mouse_click(paint, &event.mouseButton);
+                }
                 break;
             case sfEvtMouseButtonReleased:
-                paint->draw_zone->state = RELEASED;
+                // Handle mouse button release
+                if (paint->current_tool && paint->current_tool->is_drawing) {
+                    paint->current_tool->is_drawing = 0;
+                }
                 break;
             default:
                 break;

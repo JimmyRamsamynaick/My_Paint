@@ -1,20 +1,34 @@
 /*
-** EPITECH PROJECT, 2023
-** my_put_nbr.c
+** EPITECH PROJECT, 2024
+** B-MUL-200-BDX-2-1-mypaint-jimmy.ramsamynaick
 ** File description:
-** write a function that displays the number given as a parameter.
+** my_put_nbr.c
 */
 
-#include "my.h"
+int my_putchar(char c);
 
 int my_put_nbr(int nb)
 {
+    int count = 0;
+    
     if (nb < 0) {
         my_putchar('-');
-        nb *= -1;
+        count++;
+        if (nb == -2147483648) {
+            my_putchar('2');
+            nb = -147483648;
+            count++;
+        } else {
+            nb = -nb;
+        }
     }
+    
     if (nb >= 10) {
-        my_put_nbr(nb / 10);
+        count += my_put_nbr(nb / 10);
     }
-    my_putchar((nb % 10) + '0');
+    
+    my_putchar(nb % 10 + '0');
+    count++;
+    
+    return count;
 }

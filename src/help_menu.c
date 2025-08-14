@@ -11,6 +11,17 @@
 #include "../include/struct.h"
 #include <SFML/Graphics.h>
 #include <stdlib.h>
+#include <string.h>
+
+// Define missing constants
+#define HELP_LEN 80
+#define HELP_WID 30
+#define HELP_OFFSET_LEN 170
+#define HELP_OFFSET_WID 10
+#define BUTTON_THICK 2
+#define HELP_TEXT_LEN 175
+#define HELP_STR "Help"
+#define FONT "assets/font.ttf"
 
 sfRectangleShape *init_help_button_rect(void)
 {
@@ -46,16 +57,33 @@ sfText *init_help_text(void)
     return text;
 }
 
-t_gui_drop_menu *init_help_menu(void)
+menu_item_t *init_help_menu(void)
 {
-    t_gui_drop_menu *result = malloc(sizeof(t_gui_drop_menu));
-
-    result->options = NULL;
-    result->button = malloc(sizeof(t_gui_drop_object));
-    result->button->cliked = button_clicked;
-    result->button->over = mouse_over;
-    result->button->state = NONE;
-    result->button->rect = init_help_button_rect();
-    result->button->text = init_help_text();
+    menu_item_t *result = malloc(sizeof(menu_item_t));
+    
+    if (!result)
+        return NULL;
+    
+    result->text = strdup("Help");
+    
     return result;
+}
+
+void draw_help_menu(all_object_t *obj)
+{
+    if (!obj || !obj->window)
+        return;
+    
+    // Draw help menu button
+    sfRectangleShape *rect = init_help_button_rect();
+    sfText *text = init_help_text();
+    
+    if (rect && text) {
+        sfRenderWindow_drawRectangleShape(obj->window, rect, NULL);
+        sfRenderWindow_drawText(obj->window, text, NULL);
+    }
+    
+    // Cleanup
+    if (rect) sfRectangleShape_destroy(rect);
+    if (text) sfText_destroy(text);
 }

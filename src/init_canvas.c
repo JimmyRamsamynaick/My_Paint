@@ -2,24 +2,23 @@
 ** EPITECH PROJECT, 2024
 ** B-MUL-200-BDX-2-1-mypaint-jimmy.ramsamynaick
 ** File description:
-** draw_windows.c
+** init_canvas.c
 */
 
 #include "../include/my_paint.h"
 #include "../include/all_macros.h"
 #include "../include/struct.h"
-#include <SFML/Graphics.h>
-#include <stdlib.h>
 
-canvas_t *init_draw_windows(void)
+canvas_t *init_canvas(void)
 {
     canvas_t *canvas = malloc(sizeof(canvas_t));
     
     if (!canvas)
         return NULL;
-        
-    canvas->size = (sfVector2i){CANVAS_WIDTH, CANVAS_HEIGHT};
-    canvas->position = (sfVector2i){CANVAS_X, CANVAS_Y};
+    
+    // Set canvas properties
+    canvas->size = VECTOR2I(CANVAS_WIDTH, CANVAS_HEIGHT);
+    canvas->position = VECTOR2I(CANVAS_X, CANVAS_Y);
     canvas->background_color = CANVAS_BACKGROUND_COLOR;
     canvas->modified = 0;
     
@@ -40,7 +39,7 @@ canvas_t *init_draw_windows(void)
     
     // Set sprite texture and position
     sfSprite_setTexture(canvas->sprite, sfRenderTexture_getTexture(canvas->texture), sfFalse);
-    sfSprite_setPosition(canvas->sprite, (sfVector2f){CANVAS_X, CANVAS_Y});
+    sfSprite_setPosition(canvas->sprite, VECTOR2F(CANVAS_X, CANVAS_Y));
     
     // Clear canvas with background color
     sfRenderTexture_clear(canvas->texture, canvas->background_color);

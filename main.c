@@ -5,20 +5,42 @@
 ** main.c
 */
 
-#include "./include/my_paint.h"
-#include "./lib/my/my.h"
+#include "include/my_paint.h"
+#include "include/all_macros.h"
+#include "my.h"
 
 void print_help(void)
 {
-    my_printf("Usage: make\n");
-    my_printf("    then typed\n");
-    my_printf("./my_paint\n");
+    my_putstr(HELP_TEXT);
 }
 
-int main(int argc, char *argv[])
+static int check_arguments(int argc, char **argv)
 {
-    if (argc > 1 && my_strcmp(argv[1], "-h") == 0)
-        print_help();
-    else
-        my_paint();
+    if (argc == 1)
+        return SUCCESS;
+    if (argc == 2) {
+        if (my_strcmp(argv[1], "-h") == 0 || my_strcmp(argv[1], "--help") == 0) {
+            print_help();
+            return SUCCESS;
+        }
+        my_putstr("Error: Unknown argument '" );
+        my_putstr(argv[1]);
+        my_putstr("'\n");
+        my_putstr("Use -h or --help for usage information.\n");
+        return FAILURE;
+    }
+    my_putstr("Error: Too many arguments.\n");
+    my_putstr("Use -h or --help for usage information.\n");
+    return FAILURE;
+}
+
+int main(int argc, char **argv)
+{
+    int arg_result = check_arguments(argc, argv);
+    
+    if (arg_result != SUCCESS)
+        return arg_result;
+    if (argc == 2)
+        return SUCCESS;
+    return my_paint();
 }

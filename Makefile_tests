@@ -1,0 +1,41 @@
+##
+## EPITECH PROJECT, 2023
+## Makefile for tests
+## File description:
+## makefile for test compilation
+##
+
+GRAPHICS = -lcsfml-graphics -lcsfml-system -lcsfml-audio -lcsfml-window
+CPPFLAGS = -I./lib/my -I./include -I/opt/homebrew/include
+LDFLAGS = -L/opt/homebrew/lib -L./lib/my
+
+# Source files needed for tests (excluding main.c)
+TEST_DEPS = src/init_all.o src/init_canvas.o src/init_toolbar.o src/init_palette.o src/init_menu.o src/init_eraser.o src/cleanup.o src/menu_actions.o src/window.o
+
+# Test targets
+test_init_all: test_init_all.c $(TEST_DEPS)
+	gcc $(CPPFLAGS) $(LDFLAGS) -o test_init_all test_init_all.c $(TEST_DEPS) -lmy $(GRAPHICS)
+
+test_step_by_step: test_step_by_step.c $(TEST_DEPS)
+	gcc $(CPPFLAGS) $(LDFLAGS) -o test_step_by_step test_step_by_step.c $(TEST_DEPS) -lmy $(GRAPHICS)
+
+test_history_only: test_history_only.c src/menu_actions.o src/cleanup.o
+	gcc $(CPPFLAGS) $(LDFLAGS) -o test_history_only test_history_only.c src/menu_actions.o src/cleanup.o -lmy $(GRAPHICS)
+
+test_detailed_debug: test_detailed_debug.c $(TEST_DEPS)
+	gcc $(CPPFLAGS) $(LDFLAGS) -o test_detailed_debug test_detailed_debug.c $(TEST_DEPS) -lmy $(GRAPHICS)
+
+test_components: test_components.c $(TEST_DEPS)
+	gcc $(CPPFLAGS) $(LDFLAGS) -o test_components test_components.c $(TEST_DEPS) -lmy $(GRAPHICS)
+
+test_partial_init: test_partial_init.c $(TEST_DEPS)
+	gcc $(CPPFLAGS) $(LDFLAGS) -o test_partial_init test_partial_init.c $(TEST_DEPS) -lmy $(GRAPHICS)
+
+# Build all tests
+all_tests: test_init_all test_step_by_step test_history_only test_detailed_debug test_components test_partial_init
+
+# Clean test executables
+clean_tests:
+	rm -f test_init_all test_step_by_step test_history_only test_detailed_debug test_components test_partial_init
+
+.PHONY: all_tests clean_tests

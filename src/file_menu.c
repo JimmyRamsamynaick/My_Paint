@@ -11,6 +11,17 @@
 #include "../include/struct.h"
 #include <SFML/Graphics.h>
 #include <stdlib.h>
+#include <string.h>
+
+// Define missing constants
+#define FILE_LEN 80
+#define FILE_WID 30
+#define FILE_OFFSET_LEN 10
+#define FILE_OFFSET_WID 10
+#define BUTTON_THICK 2
+#define FILE_TEXT_LEN 15
+#define FILE_STR "File"
+#define FONT "assets/font.ttf"
 
 sfRectangleShape *init_file_button_rect(void)
 {
@@ -45,18 +56,35 @@ sfText *init_file_text(sfFont *font)
     return text;
 }
 
-t_gui_drop_menu *init_file_menu(void)
+menu_item_t *init_file_menu(void)
 {
-    t_gui_drop_menu *result = malloc(sizeof(t_gui_drop_menu));
-
-    result->button = malloc(sizeof(t_gui_drop_object));
-    result->button->cliked = button_clicked;
-    result->button->over = mouse_over;
-    result->button->state = NONE;
-    result->button->font = sfFont_createFromFile(FONT);
-    result->button->rect = init_file_button_rect();
-    result->button->text = init_file_text(result->button->font);
-    result->options = malloc(sizeof(t_gui_drop_options));
-    result->options->option = init_new_file_options();
+    menu_item_t *result = malloc(sizeof(menu_item_t));
+    
+    if (!result)
+        return NULL;
+    
+    result->text = strdup("File");
+    
     return result;
+}
+
+void draw_file_menu(all_object_t *obj)
+{
+    if (!obj || !obj->window)
+        return;
+    
+    // Draw file menu button
+    sfRectangleShape *rect = init_file_button_rect();
+    sfFont *font = sfFont_createFromFile(FONT);
+    sfText *text = init_file_text(font);
+    
+    if (rect && text) {
+        sfRenderWindow_drawRectangleShape(obj->window, rect, NULL);
+        sfRenderWindow_drawText(obj->window, text, NULL);
+    }
+    
+    // Cleanup
+     if (rect) sfRectangleShape_destroy(rect);
+     if (text) sfText_destroy(text);
+     if (font) sfFont_destroy(font);
 }

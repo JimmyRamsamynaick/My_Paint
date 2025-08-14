@@ -14,32 +14,64 @@
 
 void free_drawings(all_object_t *paint)
 {
-    sfRectangleShape_destroy(paint->draw_zone->rect);
-    free(paint->draw_zone);
-    sfRectangleShape_destroy(paint->eraser->rect);
-    free(paint->eraser);
-    sfRectangleShape_destroy(paint->pencil->rect);
-    free(paint->pencil);
+    if (!paint)
+        return;
+    
+    // Free canvas if it exists
+    if (paint->canvas) {
+        if (paint->canvas->texture)
+            sfTexture_destroy(paint->canvas->texture);
+        if (paint->canvas->sprite)
+            sfSprite_destroy(paint->canvas->sprite);
+        free(paint->canvas);
+    }
 }
 
 void free_all_obj(all_object_t *paint)
 {
-    sfRectangleShape_destroy(paint->edit_menu->button->rect);
-    sfFont_destroy(paint->edit_menu->button->font);
-    sfText_destroy(paint->edit_menu->button->text);
-    free(paint->edit_menu->button);
-    sfRectangleShape_destroy(paint->file_menu->button->rect);
-    sfFont_destroy(paint->file_menu->button->font);
-    sfText_destroy(paint->file_menu->button->text);
-    free(paint->file_menu->button);
-    sfRectangleShape_destroy(paint->help_menu->button->rect);
-    sfFont_destroy(paint->help_menu->button->font);
-    sfText_destroy(paint->help_menu->button->text);
-    sfRenderWindow_destroy(paint->window);
+    if (!paint)
+        return;
+    
+    // Free window
+    if (paint->window)
+        sfRenderWindow_destroy(paint->window);
+    
+    // Free menu bar
+    if (paint->menu_bar) {
+        if (paint->menu_bar->menus) {
+            for (int i = 0; i < paint->menu_bar->num_menus; i++) {
+                if (paint->menu_bar->menus[i]) {
+                    if (paint->menu_bar->menus[i]->items)
+                        free(paint->menu_bar->menus[i]->items);
+                    free(paint->menu_bar->menus[i]);
+                }
+            }
+            free(paint->menu_bar->menus);
+        }
+        free(paint->menu_bar);
+    }
+    
+    // Free toolbar
+    if (paint->toolbar) {
+        if (paint->toolbar->tool_buttons)
+            free(paint->toolbar->tool_buttons);
+        free(paint->toolbar);
+    }
+    
+    // Free palette
+    if (paint->palette) {
+        if (paint->palette->colors)
+            free(paint->palette->colors);
+        free(paint->palette);
+    }
+    
+    // Free current tool
+    if (paint->current_tool)
+        free(paint->current_tool);
+    
+    // Free drawings
     free_drawings(paint);
-    free(paint->help_menu->button);
-    free(paint->edit_menu);
-    free(paint->help_menu);
-    free(paint->file_menu);
+    
+    // Free main structure
     free(paint);
 }

@@ -5,12 +5,25 @@
 ** new_file_opt.c
 */
 
-#include "../my.h"
 #include "../include/my_paint.h"
 #include "../include/all_macros.h"
 #include "../include/struct.h"
 #include <SFML/Graphics.h>
 #include <stdlib.h>
+
+// Define missing constants
+#define FILE_LEN 100
+#define FILE_WID 30
+#define FILE_OFFSET_LEN 10
+#define FILE_OFFSET_WID 10
+#define BUTTON_THICK 2
+// FILE_TEXT_WID is already defined in all_macros.h
+#define FONT "assets/fonts/arial.ttf"
+#define NONE 0
+
+// Forward declarations
+extern void button_clicked(button_t *button, sfMouseButtonEvent *mouse);
+extern void mouse_over(button_t *button, sfVector2i mouse_pos);
 
 sfText *init_new_file_text(sfFont *font)
 {
@@ -45,15 +58,19 @@ sfRectangleShape *init_new_file_button_rect(void)
     return result;
 }
 
-struct s_gui_object *init_new_file_options(void)
+button_t *init_new_file_options(void)
 {
-    struct s_gui_object *option = malloc(sizeof(struct s_gui_object));
-
-    option->cliked = button_clicked;
-    option->over = mouse_over;
-    option->font = sfFont_createFromFile(FONT);
-    option->text = init_new_file_text(option->font);
-    option->state = NONE;
-    option->rect = init_new_file_button_rect();
+    button_t *option = malloc(sizeof(button_t));
+    
+    if (!option)
+        return NULL;
+    
+    option->position = VECTOR2I(FILE_OFFSET_LEN, FILE_OFFSET_WID + 31);
+    option->size = VECTOR2I(FILE_LEN, FILE_WID);
+    option->is_pressed = 0;
+    option->is_hovered = 0;
+    
     return option;
 }
+
+// Helper functions are now defined in click.c and over.c
