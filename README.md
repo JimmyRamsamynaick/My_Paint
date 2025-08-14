@@ -264,7 +264,7 @@ Ce projet est développé à des fins **éducatives** dans le cadre du cursus EP
 
 <div align="center">
 
-**Développé avec ❤️ par [Votre Nom]**
+**Développé avec ❤️**
 
 [![EPITECH](https://img.shields.io/badge/EPITECH-2024-blue?style=flat-square)]()
 [![Made with C](https://img.shields.io/badge/Made%20with-C-blue?style=flat-square&logo=c)]()
